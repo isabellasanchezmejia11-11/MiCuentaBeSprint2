@@ -17,7 +17,7 @@ public record CreateMovementRequest(
         @NotNull(message = "Date is required")
         LocalDate date,
 
-        @NotNull(message = "Category is required")
+        @NotNull(message = "Category ID is required")
         Long categoryId,
 
         @Size(max = 255, message = "Description must not exceed 255 characters")

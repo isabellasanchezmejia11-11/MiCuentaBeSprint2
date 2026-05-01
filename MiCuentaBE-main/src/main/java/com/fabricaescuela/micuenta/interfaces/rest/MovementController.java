@@ -29,11 +29,18 @@ import com.fabricaescuela.micuenta.application.usecase.RegisterExpenseUseCase;
 import com.fabricaescuela.micuenta.application.usecase.RegisterIncomeUseCase;
 import com.fabricaescuela.micuenta.application.usecase.UpdateMovementUseCase;
 import com.fabricaescuela.micuenta.domain.model.MovementType;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/movements")
+@Tag(name = "Movimientos", description = "Endpoints para gestionar ingresos y gastos")
+@SecurityRequirement(name = "bearerAuth")
 public class MovementController {
 
     private final RegisterIncomeUseCase registerIncomeUseCase;
@@ -63,6 +70,9 @@ public class MovementController {
     }
 
     @PostMapping("/incomes")
+    @Operation(summary = "Registrar ingreso", description = "Crea un nuevo movimiento de ingreso")
+    @ApiResponse(responseCode = "201", description = "Ingreso registrado exitosamente")
+    @ApiResponse(responseCode = "400", description = "Datos inválidos")
     public ResponseEntity<MovementResponse> registerIncome(
             @Valid @RequestBody CreateMovementRequest request,
             Authentication authentication
@@ -73,6 +83,9 @@ public class MovementController {
     }
 
     @PostMapping("/expenses")
+    @Operation(summary = "Registrar gasto", description = "Crea un nuevo movimiento de gasto")
+    @ApiResponse(responseCode = "201", description = "Gasto registrado exitosamente")
+    @ApiResponse(responseCode = "400", description = "Datos inválidos")
     public ResponseEntity<MovementResponse> registerExpense(
             @Valid @RequestBody CreateMovementRequest request,
             Authentication authentication
@@ -83,22 +96,32 @@ public class MovementController {
     }
 
     @GetMapping("/incomes")
+    @Operation(summary = "Listar ingresos", description = "Obtiene todos los ingresos del usuario")
+    @ApiResponse(responseCode = "200", description = "Lista de ingresos")
     public ResponseEntity<List<MovementResponse>> listIncomes(Authentication authentication) {
         String email = (String) authentication.getPrincipal();
         return ResponseEntity.ok(listIncomesUseCase.execute(email));
     }
 
     @GetMapping("/expenses")
+    @Operation(summary = "Listar gastos", description = "Obtiene todos los gastos del usuario")
+    @ApiResponse(responseCode = "200", description = "Lista de gastos")
     public ResponseEntity<List<MovementResponse>> listExpenses(Authentication authentication) {
         String email = (String) authentication.getPrincipal();
         return ResponseEntity.ok(listExpensesUseCase.execute(email));
     }
 
     @GetMapping
+    @Operation(summary = "Listar movimientos", description = "Obtiene movimientos del usuario con filtros opcionales")
+    @ApiResponse(responseCode = "200", description = "Lista de movimientos")
     public ResponseEntity<MovementsListResponse> listMovements(
+            @Parameter(description = "Tipo de movimiento (INCOME o EXPENSE)")
             @RequestParam(required = false) MovementType type,
+            @Parameter(description = "ID de la categoría")
             @RequestParam(required = false) Long categoryId,
+            @Parameter(description = "Fecha de inicio (YYYY-MM-DD)")
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(description = "Fecha de fin (YYYY-MM-DD)")
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             Authentication authentication
     ) {
@@ -113,7 +136,11 @@ public class MovementController {
     }
 
     @PutMapping("/{movementId}")
+    @Operation(summary = "Actualizar movimiento", description = "Actualiza los datos de un movimiento existente")
+    @ApiResponse(responseCode = "200", description = "Movimiento actualizado")
+    @ApiResponse(responseCode = "404", description = "Movimiento no encontrado")
     public ResponseEntity<MovementResponse> updateMovement(
+            @Parameter(description = "ID del movimiento")
             @PathVariable Long movementId,
             @Valid @RequestBody UpdateMovementRequest request,
             Authentication authentication
@@ -124,7 +151,11 @@ public class MovementController {
     }
 
     @DeleteMapping("/{movementId}")
+    @Operation(summary = "Eliminar movimiento", description = "Elimina un movimiento por su ID")
+    @ApiResponse(responseCode = "204", description = "Movimiento eliminado")
+    @ApiResponse(responseCode = "404", description = "Movimiento no encontrado")
     public ResponseEntity<Void> deleteMovement(
+            @Parameter(description = "ID del movimiento")
             @PathVariable Long movementId,
             Authentication authentication
     ) {

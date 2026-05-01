@@ -11,11 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fabricaescuela.micuenta.application.dto.request.CreateBudgetRequest;
 import com.fabricaescuela.micuenta.application.dto.response.BudgetResponse;
 import com.fabricaescuela.micuenta.application.usecase.CreateBudgetUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/budgets")
+@Tag(name = "Presupuestos", description = "Endpoints para gestionar presupuestos")
+@SecurityRequirement(name = "bearerAuth")
 public class BudgetController {
 
     private final CreateBudgetUseCase createBudgetUseCase;
@@ -25,6 +31,9 @@ public class BudgetController {
     }
 
     @PostMapping
+    @Operation(summary = "Crear presupuesto", description = "Crea un nuevo presupuesto para una categoría")
+    @ApiResponse(responseCode = "201", description = "Presupuesto creado exitosamente")
+    @ApiResponse(responseCode = "400", description = "Datos inválidos o presupuesto duplicado")
     public ResponseEntity<BudgetResponse> create(
             @Valid @RequestBody CreateBudgetRequest request,
             Authentication auth
