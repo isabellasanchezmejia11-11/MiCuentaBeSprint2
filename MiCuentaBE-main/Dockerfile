@@ -1,13 +1,11 @@
-FROM eclipse-temurin:21-jdk
+FROM maven:3.9.6-eclipse-temurin-17
+
 WORKDIR /app
 
-COPY .mvn .mvn
-COPY mvnw pom.xml ./
+COPY . .
 
-RUN chmod +x mvnw
-RUN ./mvnw dependency:go-offline
+RUN mvn clean package -DskipTests
 
-COPY src src
-RUN ./mvnw clean package -DskipTests
+EXPOSE 8080
 
 CMD ["sh", "-c", "java -Dserver.port=$PORT -jar target/*.jar"]
