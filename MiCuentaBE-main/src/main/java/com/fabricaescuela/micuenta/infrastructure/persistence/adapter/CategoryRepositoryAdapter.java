@@ -36,7 +36,7 @@ public class CategoryRepositoryAdapter implements CategoryRepository {
 
     @Override
     public List<Category> findByUserIdOrUserIdIsNullAndType(Long userId, MovementType type) {
-        return jpa.findByUserIdOrUserIdIsNullAndType(userId, type)
+        return jpa.findByUserIdOrUserIdIsNullAndType(userId, type.name())
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
