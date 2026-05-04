@@ -1,6 +1,7 @@
 package com.fabricaescuela.micuenta.interfaces.rest;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -85,7 +86,7 @@ public class CategoryController {
                             category.color()
                     ))
                     .toList();
-            return java.util.Stream.concat(incomes.stream(), expenses.stream()).toList();
+            return Stream.concat(incomes.stream(), expenses.stream()).toList();
         }
         return getCategoriesUseCase.execute(email, type).stream()
                 .map(category -> new CategoryResponse(
