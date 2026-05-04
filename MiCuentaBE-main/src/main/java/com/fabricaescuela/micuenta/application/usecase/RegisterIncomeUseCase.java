@@ -67,6 +67,7 @@ public class RegisterIncomeUseCase {
     private MovementResponse toResponse(Movement movement) {
         return new MovementResponse(
                 movement.id(),
+                movement.categoryId(),
                 movement.amount(),
                 movement.date(),
                 movement.type(),

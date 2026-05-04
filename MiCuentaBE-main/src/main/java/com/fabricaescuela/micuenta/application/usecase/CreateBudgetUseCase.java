@@ -71,6 +71,7 @@ public class CreateBudgetUseCase {
         Budget budget = new Budget(
                 null,
                 request.amountLimit(),
+                request.alertPercent(),
                 request.month(),
                 request.year(),
                 request.categoryId(),
@@ -85,12 +86,16 @@ public class CreateBudgetUseCase {
 
     private BudgetResponse toResponse(Budget budget, Category category) {
         return new BudgetResponse(
-                budget.id(),
-                budget.amountLimit(),
-                budget.month(),
-                budget.year(),
+                budget.getId(),
+                budget.getAmountLimit(),
+                budget.getAlertPercent(),
+                budget.getMonth(),
+                budget.getYear(),
+                budget.getCategoryId(),
                 category.name(),
-                budget.userId()
+                category.type().name(),
+                budget.getUserId(),
+                null
         );
     }
 }

@@ -8,6 +8,7 @@ import com.fabricaescuela.micuenta.domain.model.MovementType;
 
 public record MovementResponse(
         Long id,
+        Long categoryId,
         BigDecimal amount,
         LocalDate date,
         MovementType type,

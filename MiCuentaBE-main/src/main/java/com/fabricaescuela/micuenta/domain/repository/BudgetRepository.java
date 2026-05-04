@@ -14,5 +14,9 @@ public interface BudgetRepository {
 
     List<Budget> findByUserId(Long userId);
 
+    Optional<Budget> findById(Long id);
+
+    void deleteById(Long id);
+
     boolean existsByUserIdAndCategoryIdAndMonthAndYear(Long userId, Long categoryId, Integer month, Integer year);
 }

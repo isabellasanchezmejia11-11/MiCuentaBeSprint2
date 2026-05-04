@@ -60,17 +60,6 @@ public class RegisterExpenseUseCase {
         return toResponse(savedMovement);
     }
 
-    private Long parseCategoryNameToId(Long userId, String categoryName, MovementType movementType) {
-        return categoryRepository.findByUserIdOrUserIdIsNullAndType(userId, movementType)
-                .stream()
-                .filter(category -> category.name().equalsIgnoreCase(categoryName.trim()))
-                .map(Category::id)
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Category '" + categoryName + "' not found"
-                ));
-    }
-
     private String normalizeDescription(String description) {
         return (description == null || description.trim().isEmpty())
                 ? null
@@ -80,6 +69,7 @@ public class RegisterExpenseUseCase {
     private MovementResponse toResponse(Movement movement) {
         return new MovementResponse(
                 movement.id(),
+                movement.categoryId(),
                 movement.amount(),
                 movement.date(),
                 movement.type(),

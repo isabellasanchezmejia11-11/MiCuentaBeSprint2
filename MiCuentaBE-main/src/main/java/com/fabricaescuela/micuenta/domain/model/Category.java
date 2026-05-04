@@ -4,5 +4,6 @@ public record Category(
         Long id,
         String name,
         MovementType type,
-        Long userId 
+        Long userId,
+        String color
 ) {}

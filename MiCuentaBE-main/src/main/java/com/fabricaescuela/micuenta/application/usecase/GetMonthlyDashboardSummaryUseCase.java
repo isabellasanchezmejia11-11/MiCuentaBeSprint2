@@ -86,7 +86,7 @@ public class GetMonthlyDashboardSummaryUseCase {
     private BigDecimal sumByType(List<Movement> movements, MovementType type) {
         return movements.stream()
                 .filter(movement -> movement.type() == type)
-                .map(Movement::amount)
+                .map(movement -> type == MovementType.EXPENSE ? movement.amount().abs() : movement.amount())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
@@ -95,15 +95,23 @@ public class GetMonthlyDashboardSummaryUseCase {
     }
 
     private MovementResponse toResponse(Movement movement) {
-    return new MovementResponse(
-            movement.id(),
-            movement.amount(),
-            movement.date(),
-            movement.type(),
-            categoryRepository.findById(movement.categoryId())
+        Long categoryId = movement.categoryId();
+        String categoryName = "Sin categoría";
+        
+        if (categoryId != null) {
+            categoryName = categoryRepository.findById(categoryId)
                     .map(Category::name)
-                    .orElse("Sin categoría"),
-            movement.description()
-    );
-}
+                    .orElse("Sin categoría");
+        }
+        
+        return new MovementResponse(
+                movement.id(),
+                categoryId,
+                movement.amount(),
+                movement.date(),
+                movement.type(),
+                categoryName,
+                movement.description()
+        );
+    }
 }

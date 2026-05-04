@@ -48,6 +48,11 @@ public class CategoryRepositoryAdapter implements CategoryRepository {
     }
 
     @Override
+    public boolean existsByNameAndUserIdAndIdNot(String name, Long userId, Long id) {
+        return jpa.existsByNameAndUserIdAndIdNot(name, userId, id);
+    }
+
+    @Override
     public void deleteById(Long id) {
         jpa.deleteById(id);
     }

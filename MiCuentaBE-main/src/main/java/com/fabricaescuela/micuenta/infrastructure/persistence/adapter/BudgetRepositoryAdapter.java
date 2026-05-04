@@ -51,6 +51,17 @@ public class BudgetRepositoryAdapter implements BudgetRepository {
     }
 
     @Override
+    public Optional<Budget> findById(Long id) {
+        return budgetJpaRepository.findById(id)
+                .map(budgetMapper::toDomain);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        budgetJpaRepository.deleteById(id);
+    }
+
+    @Override
     public boolean existsByUserIdAndCategoryIdAndMonthAndYear(Long userId, Long categoryId, Integer month, Integer year) {
         return budgetJpaRepository.existsByUserIdAndCategoryIdAndMonthAndYear(userId, categoryId, month, year);
     }

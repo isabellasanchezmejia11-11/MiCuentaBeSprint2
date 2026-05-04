@@ -2,6 +2,7 @@ package com.fabricaescuela.micuenta.interfaces.rest;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -98,17 +99,29 @@ public class MovementController {
     @GetMapping("/incomes")
     @Operation(summary = "Listar ingresos", description = "Obtiene todos los ingresos del usuario")
     @ApiResponse(responseCode = "200", description = "Lista de ingresos")
-    public ResponseEntity<List<MovementResponse>> listIncomes(Authentication authentication) {
+    public ResponseEntity<List<MovementResponse>> listIncomes(
+            @Parameter(description = "Fecha de inicio (YYYY-MM-DD)")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(description = "Fecha de fin (YYYY-MM-DD)")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Authentication authentication
+    ) {
         String email = (String) authentication.getPrincipal();
-        return ResponseEntity.ok(listIncomesUseCase.execute(email));
+        return ResponseEntity.ok(listIncomesUseCase.execute(email, Optional.ofNullable(startDate), Optional.ofNullable(endDate)));
     }
 
     @GetMapping("/expenses")
     @Operation(summary = "Listar gastos", description = "Obtiene todos los gastos del usuario")
     @ApiResponse(responseCode = "200", description = "Lista de gastos")
-    public ResponseEntity<List<MovementResponse>> listExpenses(Authentication authentication) {
+    public ResponseEntity<List<MovementResponse>> listExpenses(
+            @Parameter(description = "Fecha de inicio (YYYY-MM-DD)")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(description = "Fecha de fin (YYYY-MM-DD)")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Authentication authentication
+    ) {
         String email = (String) authentication.getPrincipal();
-        return ResponseEntity.ok(listExpensesUseCase.execute(email));
+        return ResponseEntity.ok(listExpensesUseCase.execute(email, Optional.ofNullable(startDate), Optional.ofNullable(endDate)));
     }
 
     @GetMapping

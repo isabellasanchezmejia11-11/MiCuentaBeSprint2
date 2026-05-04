@@ -1,10 +1,11 @@
 package com.fabricaescuela.micuenta.application.usecase;
 
-import com.fabricaescuela.micuenta.domain.model.User;
 import org.springframework.stereotype.Service;
 
+import com.fabricaescuela.micuenta.application.dto.response.CategoryResponse;
 import com.fabricaescuela.micuenta.domain.model.Category;
 import com.fabricaescuela.micuenta.domain.model.MovementType;
+import com.fabricaescuela.micuenta.domain.model.User;
 import com.fabricaescuela.micuenta.domain.repository.CategoryRepository;
 import com.fabricaescuela.micuenta.domain.repository.UserRepository;
 
@@ -19,7 +20,7 @@ public class CreateCategoryUseCase {
         this.userRepository = userRepository;
     }
 
-    public Category execute(String email, String name, MovementType type) {
+    public CategoryResponse execute(String email, String name, MovementType type, String color) {
 
         User user = userRepository.findByEmail(email).orElseThrow();
 
@@ -27,6 +28,15 @@ public class CreateCategoryUseCase {
             throw new IllegalArgumentException("Ya existe esa categoría");
         }
 
-        return categoryRepository.save(new Category(null, name, type, user.id()));
+        Category saved = categoryRepository.save(new Category(null, name, type, user.id(), color));
+
+        return new CategoryResponse(
+                saved.id(),
+                saved.name(),
+                saved.type(),
+                saved.userId() != null,
+                saved.userId(),
+                saved.color()
+        );
     }
 }

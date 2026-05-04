@@ -79,4 +79,9 @@ public class MovementRepositoryAdapter implements MovementRepository {
     public BigDecimal sumAmountByUserIdAndType(Long userId, MovementType type) {
         return movementJpaRepository.sumAmountByUserIdAndType(userId, type);
     }
+
+    @Override
+    public BigDecimal sumAmountByUserIdAndCategoryIdAndDateBetweenAndType(Long userId, Long categoryId, LocalDate startDate, LocalDate endDate, MovementType type) {
+        return movementJpaRepository.sumAmountByUserIdAndCategoryIdAndDateBetweenAndType(userId, categoryId, startDate, endDate, type);
+    }
 }

@@ -17,7 +17,9 @@ public interface CategoryRepository {
 
     boolean existsByNameAndUserId(String name, Long userId);
 
+    boolean existsByNameAndUserIdAndIdNot(String name, Long userId, Long id);
+
     boolean hasMovements(Long categoryId);
 
-    void deleteById(Long id); // 🔥 ESTE FALTABA
+    void deleteById(Long id); 
 }

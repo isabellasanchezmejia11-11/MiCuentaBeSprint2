@@ -51,4 +51,21 @@ public interface MovementJpaRepository extends JpaRepository<MovementEntity, Lon
 
     // 🔥 ESTE ES EL QUE TE FALTABA
     boolean existsByCategoryId(Long categoryId);
+
+    @Query("""
+            SELECT COALESCE(SUM(m.amount), 0)
+            FROM MovementEntity m
+            WHERE m.userId = :userId
+              AND m.categoryId = :categoryId
+              AND m.date >= :startDate
+              AND m.date <= :endDate
+              AND m.type = :type
+            """)
+    BigDecimal sumAmountByUserIdAndCategoryIdAndDateBetweenAndType(
+            @Param("userId") Long userId,
+            @Param("categoryId") Long categoryId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("type") MovementType type
+    );
 }

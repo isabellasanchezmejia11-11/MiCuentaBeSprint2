@@ -5,9 +5,13 @@ import java.math.BigDecimal;
 public record BudgetResponse(
         Long id,
         BigDecimal amountLimit,
+        Integer alertPercent,
         Integer month,
         Integer year,
+        Long categoryId,
         String categoryName,
-        Long userId
+        String categoryType,
+        Long userId,
+        BigDecimal valorEjecutado
 ) {
 }

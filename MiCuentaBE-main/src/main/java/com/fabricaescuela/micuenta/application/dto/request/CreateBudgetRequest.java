@@ -12,6 +12,8 @@ public record CreateBudgetRequest(
         @DecimalMin(value = "0.01", message = "El monto debe ser mayor a cero")
         BigDecimal amountLimit,
 
+        Integer alertPercent,
+
         @NotNull(message = "El mes es requerido")
         @Min(value = 1, message = "El mes debe estar entre 1 y 12")
         Integer month,

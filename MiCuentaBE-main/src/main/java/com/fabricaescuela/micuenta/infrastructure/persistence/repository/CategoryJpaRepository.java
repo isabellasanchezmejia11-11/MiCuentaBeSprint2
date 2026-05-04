@@ -12,4 +12,6 @@ public interface CategoryJpaRepository extends JpaRepository<CategoryEntity, Lon
     List<CategoryEntity> findByUserIdOrUserIdIsNullAndType(Long userId, MovementType type);
 
     boolean existsByNameAndUserId(String name, Long userId);
+
+    boolean existsByNameAndUserIdAndIdNot(String name, Long userId, Long id);
 }

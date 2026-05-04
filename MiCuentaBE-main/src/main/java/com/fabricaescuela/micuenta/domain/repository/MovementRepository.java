@@ -24,4 +24,10 @@ public interface MovementRepository {
     List<Movement> findByUserIdWithFilters(Long userId, MovementType type, Long categoryId, LocalDate startDate, LocalDate endDate);
 
     BigDecimal sumAmountByUserIdAndType(Long userId, MovementType type);
+
+    /**
+     * Suma los montos de movimientos de un usuario, por categoría, en un rango de fechas y tipo.
+     * Útil para calcular el valor ejecutado de un presupuesto.
+     */
+    BigDecimal sumAmountByUserIdAndCategoryIdAndDateBetweenAndType(Long userId, Long categoryId, LocalDate startDate, LocalDate endDate, MovementType type);
 }

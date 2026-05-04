@@ -134,6 +134,7 @@ public class UpdateMovementUseCase {
 
         return new MovementResponse(
                 movement.id(),
+                movement.categoryId(),
                 movement.amount(),
                 movement.date(),
                 movement.type(),

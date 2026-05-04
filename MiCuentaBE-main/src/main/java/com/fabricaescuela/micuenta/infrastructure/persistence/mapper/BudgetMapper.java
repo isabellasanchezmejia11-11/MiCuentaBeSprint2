@@ -12,6 +12,7 @@ public class BudgetMapper {
         return new Budget(
                 entity.getId(),
                 entity.getAmountLimit(),
+                entity.getAlertPercent(),
                 entity.getMonth(),
                 entity.getYear(),
                 entity.getCategoryId(),
@@ -21,12 +22,13 @@ public class BudgetMapper {
 
     public BudgetEntity toEntity(Budget budget) {
         return new BudgetEntity(
-                budget.id(),
-                budget.amountLimit(),
-                budget.month(),
-                budget.year(),
-                budget.categoryId(),
-                budget.userId()
+                budget.getId(),
+                budget.getAmountLimit(),
+                budget.getAlertPercent(),
+                budget.getMonth(),
+                budget.getYear(),
+                budget.getCategoryId(),
+                budget.getUserId()
         );
     }
 }

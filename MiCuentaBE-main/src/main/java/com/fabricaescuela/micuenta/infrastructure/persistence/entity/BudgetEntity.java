@@ -27,11 +27,14 @@ public class BudgetEntity {
     @Column(name = "amount_limit", nullable = false, precision = 15, scale = 2)
     private BigDecimal amountLimit;
 
-    // 🔥 CORREGIDO
+    @Column(name = "alert_percent")
+    private Integer alertPercent;
+
+   
     @Column(name = "month_value", nullable = false)
     private Integer month;
 
-    // 🔥 CORREGIDO
+    
     @Column(name = "year_value", nullable = false)
     private Integer year;
 
@@ -44,9 +47,10 @@ public class BudgetEntity {
     public BudgetEntity() {
     }
 
-    public BudgetEntity(Long id, BigDecimal amountLimit, Integer month, Integer year, Long categoryId, Long userId) {
+    public BudgetEntity(Long id, BigDecimal amountLimit, Integer alertPercent, Integer month, Integer year, Long categoryId, Long userId) {
         this.id = id;
         this.amountLimit = amountLimit;
+        this.alertPercent = alertPercent;
         this.month = month;
         this.year = year;
         this.categoryId = categoryId;
@@ -60,6 +64,14 @@ public class BudgetEntity {
 
     public BigDecimal getAmountLimit() {
         return amountLimit;
+    }
+
+    public Integer getAlertPercent() {
+        return alertPercent;
+    }
+
+    public void setAlertPercent(Integer alertPercent) {
+        this.alertPercent = alertPercent;
     }
 
     public Integer getMonth() {

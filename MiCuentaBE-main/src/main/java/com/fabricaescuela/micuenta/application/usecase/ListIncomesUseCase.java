@@ -1,6 +1,8 @@
 package com.fabricaescuela.micuenta.application.usecase;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -34,13 +36,16 @@ public class ListIncomesUseCase {
     }
 
     @Transactional(readOnly = true)
-    public List<MovementResponse> execute(String authenticatedEmail) {
+    public List<MovementResponse> execute(String authenticatedEmail, Optional<LocalDate> startDate, Optional<LocalDate> endDate) {
 
         User user = userRepository.findByEmail(authenticatedEmail.trim().toLowerCase())
                 .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
 
-        return movementRepository.findByUserIdAndType(user.id(), MovementType.INCOME)
-                .stream()
+        List<Movement> movements = movementRepository.findByUserIdAndType(user.id(), MovementType.INCOME);
+
+        return movements.stream()
+                .filter(movement -> startDate.map(date -> !movement.date().isBefore(date)).orElse(true))
+                .filter(movement -> endDate.map(date -> !movement.date().isAfter(date)).orElse(true))
                 .map(this::toResponse)
                 .toList();
     }
@@ -48,6 +53,7 @@ public class ListIncomesUseCase {
     private MovementResponse toResponse(Movement movement) {
         return new MovementResponse(
                 movement.id(),
+                movement.categoryId(),
                 movement.amount(),
                 movement.date(),
                 movement.type(),
