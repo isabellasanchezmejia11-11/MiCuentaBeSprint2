@@ -58,11 +58,35 @@ public class CategoryController {
     @Operation(summary = "Listar categorías", description = "Obtiene las categorías del usuario filtradas por tipo")
     @ApiResponse(responseCode = "200", description = "Lista de categorías")
     public List<CategoryResponse> list(
-            @Parameter(description = "Tipo de movimiento (INCOME o EXPENSE)")
-            @RequestParam MovementType type,
+            @Parameter(description = "Tipo de movimiento (INCOME o EXPENSE, opcional)")
+            @RequestParam(required = false) MovementType type,
             Authentication auth
     ) {
         String email = (String) auth.getPrincipal();
+        if (type == null) {
+            // Si no se especifica tipo, devolver ambos tipos
+            List<CategoryResponse> incomes = getCategoriesUseCase.execute(email, MovementType.INCOME).stream()
+                    .map(category -> new CategoryResponse(
+                            category.id(),
+                            category.name(),
+                            category.type(),
+                            category.userId() != null,
+                            category.userId(),
+                            category.color()
+                    ))
+                    .toList();
+            List<CategoryResponse> expenses = getCategoriesUseCase.execute(email, MovementType.EXPENSE).stream()
+                    .map(category -> new CategoryResponse(
+                            category.id(),
+                            category.name(),
+                            category.type(),
+                            category.userId() != null,
+                            category.userId(),
+                            category.color()
+                    ))
+                    .toList();
+            return java.util.Stream.concat(incomes.stream(), expenses.stream()).toList();
+        }
         return getCategoriesUseCase.execute(email, type).stream()
                 .map(category -> new CategoryResponse(
                         category.id(),
