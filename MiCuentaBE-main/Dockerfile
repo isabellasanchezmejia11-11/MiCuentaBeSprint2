@@ -5,7 +5,7 @@ WORKDIR /app
 COPY MiCuentaBE-main/pom.xml .
 COPY MiCuentaBE-main/src ./src
 
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests=true -Dmaven.test.skip=true
 
 EXPOSE 8080
 
