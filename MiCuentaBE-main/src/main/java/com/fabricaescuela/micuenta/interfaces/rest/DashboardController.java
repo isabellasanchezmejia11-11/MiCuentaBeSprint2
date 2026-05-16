@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fabricaescuela.micuenta.application.dto.response.DashboardSummaryResponse;
+import com.fabricaescuela.micuenta.application.dto.response.EvolutionResponse;
 import com.fabricaescuela.micuenta.application.usecase.GetMonthlyDashboardSummaryUseCase;
+import com.fabricaescuela.micuenta.application.usecase.GetMonthlyEvolutionUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,9 +22,14 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 public class DashboardController {
 
     private final GetMonthlyDashboardSummaryUseCase getMonthlyDashboardSummaryUseCase;
+    private final GetMonthlyEvolutionUseCase getMonthlyEvolutionUseCase;
 
-    public DashboardController(GetMonthlyDashboardSummaryUseCase getMonthlyDashboardSummaryUseCase) {
+    public DashboardController(
+            GetMonthlyDashboardSummaryUseCase getMonthlyDashboardSummaryUseCase,
+            GetMonthlyEvolutionUseCase getMonthlyEvolutionUseCase
+    ) {
         this.getMonthlyDashboardSummaryUseCase = getMonthlyDashboardSummaryUseCase;
+        this.getMonthlyEvolutionUseCase = getMonthlyEvolutionUseCase;
     }
 
     @GetMapping("/monthly-summary")
@@ -31,6 +38,15 @@ public class DashboardController {
     public ResponseEntity<DashboardSummaryResponse> getMonthlySummary(Authentication authentication) {
         String email = (String) authentication.getPrincipal();
         DashboardSummaryResponse response = getMonthlyDashboardSummaryUseCase.execute(email);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/evolution")
+    @Operation(summary = "Obtener evolución mensual", description = "Retorna la evolución de ingresos y gastos de los últimos 6 meses en formato de gráfico o tabla")
+    @ApiResponse(responseCode = "200", description = "Evolución mensual de ingresos y gastos")
+    public ResponseEntity<EvolutionResponse> getMonthlyEvolution(Authentication authentication) {
+        String email = (String) authentication.getPrincipal();
+        EvolutionResponse response = getMonthlyEvolutionUseCase.execute(email);
         return ResponseEntity.ok(response);
     }
 }
